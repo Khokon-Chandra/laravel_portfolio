@@ -8,10 +8,24 @@ use Illuminate\Http\Request;
 
 class ServiceController extends Controller
 {
-    public function get()
+    
+    public $viewInfo = [
+        'pageName'=>"Service",
+        'action'=>['delete','update'],
+        'attribute'=>['image','title','description','created_at']
+    ];
+
+    public function get(Request $request)
     {
-        $data = json_encode(ServiceModel::all());
-        return view('admin/services',['services'=>$data]);
+        if($request->method() == "POST"){
+          
+            return json_encode([
+                "viewInfo"=>$this->viewInfo,
+                "data"=> ServiceModel::all()
+            ]);
+        }
+
+        return view('admin/services');
     }
 
     public function onInsert()

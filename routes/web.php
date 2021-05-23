@@ -49,6 +49,7 @@ Route::prefix('admin')->group(function () {
 
 
     Route::get('/services',[ServiceController::class,'get']);
+    Route::post('/services',[ServiceController::class,'get']);
     Route::post('/insertService',[ServiceController::class,'onInsert']);
     Route::post('/updateSevice',[ServiceController::class,'onUpdate']);
     Route::post('/deleteService',[ServiceController::class,'onDelete']);

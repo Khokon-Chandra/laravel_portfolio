@@ -211,6 +211,6 @@ $(document).ready(function(){
         placeAction(this);
     })
 
-        
+
 
 });

@@ -38,6 +38,13 @@ const pageName = 'Visitor';
 ",$visitors);
 ?>
 
+<script>
+const pageName = "Service";
+let action = ['delete','update'];
+let attriute = ['image','title','description','created_at'];
+
+</script>
+
 @endsection
 
 
