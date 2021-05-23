@@ -35,19 +35,22 @@ class ServiceController extends Controller
 
     public function onUpdate(Request $request)
     {
-        return ServiceModel::where('id','=',$request->input('id'))
-        ->update([
-            'title'=>$request->input('title'),
-            'description'=>$request->input('description'),
-            'image'=>$request->input('image'),
-            'updated_at'=>date('Y-m-d H:i:s')
-        ]);
+        // return ServiceModel::where('id','=',$request->input('id'))
+        // ->update([
+        //     'title'=>$request->input('title'),
+        //     'description'=>$request->input('description'),
+        //     'image'=>$request->input('image'),
+        //     'updated_at'=>date('Y-m-d H:i:s')
+        // ]);
+
+        return url($request->file('fileKey')->store('/public'));
+        // return $request->input('title');
         
     }
 
     public function onDelete(Request $request)
     {
        return ServiceModel::where('id','=',$request->input('id'))->delete();
-        
+
     }
 }
