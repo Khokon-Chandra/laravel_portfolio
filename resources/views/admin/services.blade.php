@@ -11,7 +11,7 @@
 
 			<h2>Services</h2>
 			<div class=" my-3 d-flex justify-content-between">
-			<a class="btn btn-sm btn-primary">Add New</a>
+			<button type="button" class="btn btn-sm btn-primary ripple-surface">Add New</button>
 			<p><a href="{{url('/admin')}}" >Admin</a>\Services</p>
 			</div>
 			<div class="preloader mt-5 text-center">

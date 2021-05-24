@@ -44,6 +44,8 @@ const UIController = (()=>{
     }
 
 
+   
+
 
     return {
 
@@ -175,8 +177,8 @@ const ActionController = (()=>{
                     
         
         Swal.fire({
-          title: 'Submit your Github username',
-          html:`<input type="text" value="${title}" id="title" class="form-control mb-3" placeholder="Title"><input type="text" value="${description}" id="description" class="form-control mb-3" placeholder="Description"><input type="file" id="image" class="form-control mb-3" accept="image/*"><div class="text-center" id="showImage"><img width="50%" src="${image}"></div>`,
+          title: 'Update Database',
+          html:`<input type="text" value="${title}" id="title" class="form-control mb-3" placeholder="Title"><input type="text" value="${description}" id="description" class="form-control mb-3" placeholder="Description"><input type="file" id="image" class="form-control mb-3" accept="image/*"><div class="text-center" id="showImage"><img width="80%" src="${image}"></div>`,
           inputAttributes: {
             autocapitalize: 'off'
           },
@@ -187,28 +189,29 @@ const ActionController = (()=>{
             let myfile = document.getElementById('image').files[0];
             let config = {headers:{'content-type':'multipart/form-data'}}
             
-            if(typeof myfile !== 'undefined'){
-               var data = fileCatch(myfile,element);
-               return await axios.post(element.href,data,config);
-            }else{
-                var data = {
-                    id:$(element).data('id'),
-                    title:$("#title").val(),
-                    description:$("#description").val(),
-                    image: $(".showImage").children('img').attr('src')
+            try {
+                if(typeof myfile !== 'undefined'){
+                   var data = fileCatch(myfile,element);
+                   return await axios.post(element.href,data,config);
+                }else{
+                    var data = {
+                        id:$(element).data('id'),
+                        title:$("#title").val(),
+                        description:$("#description").val(),
+                        image: $(".showImage").children('img').attr('src')
+                    }
+                    return await axios.post(element.href,data);
                 }
-                 return await axios.post(element.href,data);
+            } catch(e) {
+                throw new Error("Server Error");
             }
-
-
-
             
           },
           allowOutsideClick: () => !Swal.isLoading()
         }).then((result) => {
-            console.log(result.value.data);
           if (result.isConfirmed) {
             UIController.setToast("Updated Successfully");
+            Controller.initial();
           }
         })
 
@@ -229,7 +232,6 @@ const ActionController = (()=>{
             if(response.status === 200){
                 $(".spinner").remove();
                 UIController.setToast('deleted successfully');
-                Controller.initial;
             }
         } catch(e) {
             

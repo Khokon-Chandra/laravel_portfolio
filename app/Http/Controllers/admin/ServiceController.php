@@ -25,6 +25,7 @@ class ServiceController extends Controller
             ]);
         }
 
+        
         return view('admin/services');
     }
 
@@ -35,16 +36,27 @@ class ServiceController extends Controller
 
     public function onUpdate(Request $request)
     {
-        // return ServiceModel::where('id','=',$request->input('id'))
-        // ->update([
-        //     'title'=>$request->input('title'),
-        //     'description'=>$request->input('description'),
-        //     'image'=>$request->input('image'),
-        //     'updated_at'=>date('Y-m-d H:i:s')
-        // ]);
+        
 
-        return url($request->file('fileKey')->store('/public'));
-        // return $request->input('title');
+        if(is_null($request->file('fileKey'))){
+            return ServiceModel::where('id','=',$request->input('id'))
+            ->update([
+                'title'=>$request->input('title'),
+                'description'=>$request->input('description'),
+                'updated_at'=>date('Y-m-d H:i:s')
+            ]);
+        }else{
+            
+             return ServiceModel::where('id','=',$request->input('id'))
+            ->update([
+                'title'=>$request->input('title'),
+                'description'=>$request->input('description'),
+                'image'=>$file = url('storage/'.explode('/', $request->file('fileKey')->store('/public'))[1]),
+                'updated_at'=>date('Y-m-d H:i:s')
+            ]);
+        }
+
+       
         
     }
 
