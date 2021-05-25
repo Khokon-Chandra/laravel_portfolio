@@ -55,9 +55,10 @@ Route::prefix('admin')->group(function () {
     Route::post('/deleteService',[ServiceController::class,'onDelete']);
 
     Route::get('/courses',[CourseController::class,'get']);
+    Route::post('/courses',[CourseController::class,'get']);
     Route::post('/insertCourse',[CourseController::class,'onInsert']);
     Route::post('/updateCourse',[CourseController::class,'onUpdate']);
-    Route::post('/delelteCourse',[CourseController::class,'onDelete']);
+    Route::post('/deleteCourse',[CourseController::class,'onDelete']);
 
     Route::get('/projects',[ProjectController::class,'get']);
     Route::post('/insertProject',[ProjectController::class,'onInsert']);

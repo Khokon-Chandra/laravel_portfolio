@@ -1,3 +1,9 @@
+
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCourseModal">
+ Add New Course
+</button>
+
 <div class="modal fade" id="addCourseModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">

@@ -1,5 +1,10 @@
 const baseUrl = 'http://127.0.0.1:8000/admin/';
 
+var c = 1;
+function count(){
+    return c++;
+}
+
 const fileReader = function(file) {
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -23,7 +28,7 @@ const UIController = (() => {
 
     let tableTem = `<table id="dataTable" class="table table-striped table-bordered" cellspacing="0" width="100%"><thead><tr><th class="th-sm">Image</th><th class="th-sm">Title</th><th class="th-sm">Description</th><th class="th-sm">Date</th><th class="th-sm">Action</th></tr></thead><tbody id="tbody">table_content</tbody></table>`;
 
-    const toast = (msg) => {
+    const toast = (iconType,msg) => {
         const toastStatus = Swal.mixin({
             toast: true,
             position: 'top',
@@ -37,7 +42,7 @@ const UIController = (() => {
         })
 
         toastStatus.fire({
-            icon: 'success',
+            icon: iconType,
             title: msg,
             allowOutsideClick: true,
         })
@@ -52,8 +57,8 @@ const UIController = (() => {
         spinner: smSpinner,
         table: tableTem,
 
-        setToast: (msg) => {
-            toast(msg);
+        setToast: (icon,msg) => {
+            toast(icon,msg);
         },
 
     }
@@ -99,7 +104,9 @@ const TableController = (() => {
                 if (attr == 'sn') {
                     str += `<th class="th-sm">${count()}</th>`;
                 } else {
-                    str += `<th data-attr="${attr}" class="th-sm">${singleRow[attr]}</th>`;
+                    let char = singleRow[attr];
+                    let words = (char !== null) ? char.split(' ').slice(0,20).join(' ') : '';
+                    str += `<th data-attr="${attr}" class="th-sm">${words}</th>`;
                 }
 
             }
@@ -201,7 +208,7 @@ const ActionController = (() => {
             allowOutsideClick: () => !Swal.isLoading()
         }).then((result) => {
             if (result.isConfirmed) {
-                UIController.setToast("Inserted Successfully");
+                UIController.setToast("success","Inserted Successfully");
                 Controller.initial();
             }
         })
@@ -293,7 +300,7 @@ const ActionController = (() => {
             allowOutsideClick: () => !Swal.isLoading()
         }).then((result) => {
             if (result.isConfirmed) {
-                UIController.setToast("Updated Successfully");
+                UIController.setToast("success","Updated Successfully");
                 Controller.initial();
             }
         })
@@ -316,9 +323,10 @@ const ActionController = (() => {
             const response = await axios.post(url, data);
             if (response.status === 200) {
                 $(".spinner").remove();
-                UIController.setToast('deleted successfully');
+                UIController.setToast('success','deleted successfully');
             }
         } catch (e) {
+            UIController.setToast('error','Delate Faild');
 
             console.log(e);
         }
@@ -359,7 +367,7 @@ const ActionController = (() => {
 
 const Controller = (() => {
 
-    async function init() {
+    const init = async ()=>{
 
         let response = await axios.post(window.location.href);
         TableController.tableBody(response.data);
