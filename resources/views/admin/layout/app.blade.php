@@ -6,7 +6,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>@yield('title')</title>
     <script src="{{asset('js/sweetalert2@11.js')}}"></script>
-    <link rel="stylesheet" href="{{asset('css/fontawesome.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('css/fontawesome.css')}}">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/mdb.min.css')}}">

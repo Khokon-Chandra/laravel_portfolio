@@ -1,16 +1,16 @@
-
 const baseUrl = 'http://127.0.0.1:8000/admin/';
 
-const fileReader = function(file){
+const fileReader = function(file) {
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = function(result){
-        $("#showImage img").attr('src',reader.result);
+    reader.onload = function(result) {
+        $("#showImage img").attr('src', reader.result);
+        $("#image").removeClass('is-invalid');
     }
 }
 
 
-const UIController = (()=>{
+const UIController = (() => {
 
     /**
     Spinner html is appear here
@@ -22,37 +22,37 @@ const UIController = (()=>{
     */
 
     let tableTem = `<table id="dataTable" class="table table-striped table-bordered" cellspacing="0" width="100%"><thead><tr><th class="th-sm">Image</th><th class="th-sm">Title</th><th class="th-sm">Description</th><th class="th-sm">Date</th><th class="th-sm">Action</th></tr></thead><tbody id="tbody">table_content</tbody></table>`;
-    
-    const toast = (msg)=>{
+
+    const toast = (msg) => {
         const toastStatus = Swal.mixin({
-          toast: true,
-          position: 'top',
-          showConfirmButton: false,
-          timer: 2000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer)
-            toast.addEventListener('mouseleave', Swal.resumeTimer)
-          }
+            toast: true,
+            position: 'top',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
         })
 
         toastStatus.fire({
-          icon: 'success',
-          title: msg,
-          allowOutsideClick:true,
+            icon: 'success',
+            title: msg,
+            allowOutsideClick: true,
         })
     }
 
 
-   
+
 
 
     return {
 
-        spinner:smSpinner,
-        table:tableTem,
+        spinner: smSpinner,
+        table: tableTem,
 
-        setToast:(msg)=>{
+        setToast: (msg) => {
             toast(msg);
         },
 
@@ -62,16 +62,16 @@ const UIController = (()=>{
 
 
 
-const TableController = (()=>{
+const TableController = (() => {
 
 
-    function setDataTable(){
+    function setDataTable() {
         $('#dataTable').DataTable();
         $('.dataTables_length').addClass('bs-select');
     }
 
 
-    const buttonObject = function(data_id){
+    const buttonObject = function(data_id) {
         return {
             update: `<a class="update" data-id="${data_id}" href="${baseUrl}update${pageName}"><i class="fas fa-edit"></i></a>`,
             delete: `<a class="delete" data-id="${data_id}" href="${baseUrl}delete${pageName}"><i class="fas fa-trash-alt"></i></a>`
@@ -79,57 +79,57 @@ const TableController = (()=>{
     }
 
 
-    const getAction = function(data_id,tableData,action){
+    const getAction = function(data_id, tableData, action) {
         let str = "";
-        $.each(action,function(i,item){
+        $.each(action, function(i, item) {
             str += buttonObject(data_id)[item];
         });
-       
+
         return `<tr>${tableData} <th class="d-flex justify-content-around">${str}</th></tr>`;
     }
 
 
 
-    const getTableRow = function(singleRow,viewInfo){
+    const getTableRow = function(singleRow, viewInfo) {
         let str = "";
-        $.each(viewInfo.attribute,function(i,attr){
-            if(attr === 'image'){
+        $.each(viewInfo.attribute, function(i, attr) {
+            if (attr === 'image') {
                 str += `<th data-attr="image" class="th-sm"><img class="table-img" src="${singleRow[attr]}"></th>`;
-            }else{
-                if(attr == 'sn'){
+            } else {
+                if (attr == 'sn') {
                     str += `<th class="th-sm">${count()}</th>`;
-                }else{
+                } else {
                     str += `<th data-attr="${attr}" class="th-sm">${singleRow[attr]}</th>`;
                 }
-                
+
             }
         });
 
-        return getAction(singleRow.id,str,viewInfo.action);
+        return getAction(singleRow.id, str, viewInfo.action);
     }
 
 
 
 
-    const setTableBody = (allData)=>{
-       
+    const setTableBody = (allData) => {
+
         $("#root").empty();
 
 
         let tbody = '';
-        $.each(allData.data,function(i,row){
-           tbody += getTableRow(row,allData.viewInfo);
+        $.each(allData.data, function(i, row) {
+            tbody += getTableRow(row, allData.viewInfo);
         });
 
 
-        let table = UIController.table.replace("table_content",tbody);
+        let table = UIController.table.replace("table_content", tbody);
         $("#root").append(table);
         setDataTable();
 
     }
 
     return {
-        tableBody:(json)=>{
+        tableBody: (json) => {
             setTableBody(json);
         }
     }
@@ -139,102 +139,187 @@ const TableController = (()=>{
 
 
 
-const ActionController = (()=>{
+const ActionController = (() => {
 
 
-    function fileCatch(file,element){
-         
-            
-            let filedata = new FormData();
-           
-            filedata.append('id',$(element).data('id'));
-            filedata.append('title',$("#title").val());
-            filedata.append('description',$("#description").val());
-            filedata.append('fileKey',file);
+    function fileCatch(file, element) {
 
-            return filedata;
+        let filedata = new FormData();
+
+        filedata.append('id', $(element).data('id'));
+        filedata.append('title', $("#title").val());
+        filedata.append('description', $("#description").val());
+        filedata.append('fileKey', file);
+
+        return filedata;
     }
 
 
+    const insertRow = (element) => {
 
-    const updateRow = (element)=>{
-        var btn = $(element).closest('th');
-        var tdata = $(btn).prevAll('th');
-        var title,description,image;
-        $.each(tdata,function(i,attr){
-           
-            if($(attr).data('attr') == 'title'){
-                title  = $(attr).text();
-            }
-            else if ($(attr).data('attr') == 'description') {
-                description  = $(attr).text();
-            }
-            else if ($(attr).data('attr') == 'image') {
-                image  = $(attr).children('img').attr('src');
-            }
-        })
-
-                    
-        
         Swal.fire({
-          title: 'Update Database',
-          html:`<input type="text" value="${title}" id="title" class="form-control mb-3" placeholder="Title"><input type="text" value="${description}" id="description" class="form-control mb-3" placeholder="Description"><input type="file" id="image" class="form-control mb-3" accept="image/*"><div class="text-center" id="showImage"><img width="80%" src="${image}"></div>`,
-          inputAttributes: {
-            autocapitalize: 'off'
-          },
-          showCancelButton: true,
-          confirmButtonText: 'Look up',
-          showLoaderOnConfirm: true,
-          preConfirm: async (login) => {
-            let myfile = document.getElementById('image').files[0];
-            let config = {headers:{'content-type':'multipart/form-data'}}
-            
-            try {
-                if(typeof myfile !== 'undefined'){
-                   var data = fileCatch(myfile,element);
-                   return await axios.post(element.href,data,config);
-                }else{
-                    var data = {
-                        id:$(element).data('id'),
-                        title:$("#title").val(),
-                        description:$("#description").val(),
-                        image: $(".showImage").children('img').attr('src')
+            title: 'Insert Information',
+            html: `<input type="text"  id="title" class="form-control mb-3" placeholder="Title"><input type="text" id="description" class="form-control mb-3" placeholder="Description"><input type="file" id="image" class="form-control mb-3" accept="image/*"><div class="text-center" id="showImage"><img width="80%" src="http://127.0.0.1:8000/images/placeholder.png"></div>`,
+            inputAttributes: {
+                autocapitalize: 'off'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Look up',
+            showLoaderOnConfirm: true,
+            preConfirm: (login) => {
+                var data;
+                var myfile = document.getElementById('image').files[0];
+                var config = {
+                    headers: {
+                        'content-type': 'multipart/form-data'
                     }
-                    return await axios.post(element.href,data);
                 }
-            } catch(e) {
-                throw new Error("Server Error");
-            }
-            
-          },
-          allowOutsideClick: () => !Swal.isLoading()
+
+                
+
+                if (Controller.isFormValid([$("#title"), $("#description"), $("#image")])) {
+
+                    return axios.post(element.href, fileCatch(myfile, element), config)
+                        .then(response => {
+                            if (response.status !== 200) {
+                                throw new Error(response.statusText)
+                            }
+                            return response;
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(
+                                `Request failed: ${error}`
+                            )
+                        })
+
+                } else {
+                    Swal.showValidationMessage('Field must not be empty!!');
+                }
+
+
+            },
+            allowOutsideClick: () => !Swal.isLoading()
         }).then((result) => {
-          if (result.isConfirmed) {
-            UIController.setToast("Updated Successfully");
-            Controller.initial();
-          }
+            if (result.isConfirmed) {
+                UIController.setToast("Inserted Successfully");
+                Controller.initial();
+            }
         })
 
-        $('#image').on('change',function(){
-            
+        $('#image').on('change', function() {
+
             fileReader(this.files[0]);
         });
     }
 
 
-    const deleteRow = async (element)=>{
+    /*
+    ...................Table Update section----------------------
+    */
+
+
+    const updateRow = (element) => {
+        var btn = $(element).closest('th');
+        var tdata = $(btn).prevAll('th');
+        var formData = {};
+
+        $.each(tdata, function(i, attr) {
+
+            if ($(attr).data('attr') == 'image') {
+                formData.image = $(attr).children('img').attr('src');
+            } else {
+                formData[$(attr).data('attr')] = $(attr).text();
+            }
+
+        })
+
+
+
+        Swal.fire({
+            title: 'Update Information',
+            html: `<input type="text" value="${formData.title}" id="title" class="form-control mb-3" placeholder="Title"><input type="text" value="${formData.description}" id="description" class="form-control mb-3" placeholder="Description"><input type="file" id="image" class="form-control mb-3" accept="image/*"><div class="text-center" id="showImage"><img width="80%" src="${formData.image}"><input type="hidden" id="img" value="${formData.image}"></div>`,
+            inputAttributes: {
+                autocapitalize: 'off'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Look up',
+            showLoaderOnConfirm: true,
+            preConfirm: (login) => {
+                var data;
+                var myfile = document.getElementById('image').files[0];
+                var config = {
+                    headers: {
+                        'content-type': 'multipart/form-data'
+                    }
+                }
+
+                if (typeof myfile !== 'undefined') {
+                    data = fileCatch(myfile, element);
+                } else {
+                    data = {
+                        id: $(element).data('id'),
+                        title: $("#title").val(),
+                        description: $("#description").val(),
+                        image: $(".showImage").children('img').attr('src')
+                    }
+                    config = null;
+                }
+
+
+                console.log(Controller.isFormValid([$("#title"), $("#description"), $("#img")]))
+
+
+                if (Controller.isFormValid([$("#title"), $("#description"), $("#img")])) {
+
+                    return axios.post(element.href, data, config)
+                        .then(response => {
+                            if (response.status !== 200) {
+                                throw new Error(response.statusText)
+                            }
+                            return response;
+                        })
+                        .catch(error => {
+                            Swal.showValidationMessage(
+                                `Request failed: ${error}`
+                            )
+                        })
+
+                } else {
+                    Swal.showValidationMessage('Field must not be empty!!');
+                }
+
+
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                UIController.setToast("Updated Successfully");
+                Controller.initial();
+            }
+        })
+
+        $('#image').on('change', function() {
+
+            fileReader(this.files[0]);
+        });
+    }
+
+
+    const deleteRow = async(element) => {
         let url = element.href;
         let data_id = $(element).data('id');
-        let data = {id:data_id}
-        $(element ).append(UIController.spinner);
+        let data = {
+            id: data_id
+        }
+        $(element).append(UIController.spinner);
         try {
-            const response = await axios.post(url,data);
-            if(response.status === 200){
+            const response = await axios.post(url, data);
+            if (response.status === 200) {
                 $(".spinner").remove();
                 UIController.setToast('deleted successfully');
             }
-        } catch(e) {
-            
+        } catch (e) {
+
             console.log(e);
         }
 
@@ -243,24 +328,27 @@ const ActionController = (()=>{
     }
 
 
-    const placeAction = (actionElement )=>{
+    const actions = {
+        delete: (element) => {
+            deleteRow(element);
+        },
 
-        const actions = {
-            delete:(element)=>{
-                deleteRow(element);
-            },
-            update:(element)=>{
-                updateRow(element);
-            }
+        update: (element) => {
+            updateRow(element);
+        },
+
+        insert: (element) => {
+            insertRow(element);
         }
 
-        
-        actions[actionElement .className](actionElement );
     }
 
+
+
+
     return {
-        setAction:(element)=>{
-            placeAction(element);
+        setAction: (element) => {
+            actions[element.className](element);
         }
     }
 
@@ -269,30 +357,47 @@ const ActionController = (()=>{
 
 
 
-const Controller = (()=>{
+const Controller = (() => {
 
-    async function init(){
-        
+    async function init() {
+
         let response = await axios.post(window.location.href);
         TableController.tableBody(response.data);
 
-        $(".delete,.update,.insert").on('click', function(event) { 
-           event.preventDefault();
-           ActionController.setAction(this);
+        $(".delete,.update").on('click', function(event) {
+            event.preventDefault();
+            ActionController.setAction(this);
         });
 
-        $(".paginate_button ").on('click',function(){
-            $(".delete,.update,.insert").on('click', function(event) {     
-               event.preventDefault();
-               ActionController.setAction(this);
+        $(".paginate_button").on('click', function() {
+            $(".delete,.update").on('click', function(event) {
+                event.preventDefault();
+                ActionController.setAction(this);
             });
         })
 
     }
 
+
+    const validateForm = (fields) => {
+        var status = true;
+        $.each(fields, function(i, field) {
+            if (field.val() == "" || field.val() === 'undefined') {
+                field.addClass('is-invalid');
+                status = false;
+            }
+        });
+
+        return status;
+    }
+
     return {
-        initial : ()=>{
+        initial: () => {
             init();
+        },
+
+        isFormValid: (fields) => {
+            return validateForm(fields);
         }
     }
 })()
@@ -302,9 +407,14 @@ const Controller = (()=>{
 
 
 
+$(document).ready(function() {
 
-$(document).ready(function(){
-    
-   Controller.initial();
+    $(".insert").click(function(event) {
+        event.preventDefault();
+        ActionController.setAction(this);
+
+    })
+
+    Controller.initial();
 
 })

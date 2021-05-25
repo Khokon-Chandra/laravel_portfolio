@@ -15,28 +15,43 @@ class ServiceController extends Controller
         'attribute'=>['image','title','description','created_at']
     ];
 
+
+
+
     public function get(Request $request)
     {
         if($request->method() == "POST"){
           
             return json_encode([
                 "viewInfo"=>$this->viewInfo,
-                "data"=> ServiceModel::all()
+                "data"=> ServiceModel::orderBy('id','desc')->get()
             ]);
         }
 
-        
+       
         return view('admin/services');
     }
 
-    public function onInsert()
+
+
+
+
+    public function onInsert(Request $request)
     {
-        
+       return ServiceModel::insert([
+            'title' => $request->input('title'),
+            'description'=> $request->input('description'),
+            'image' => url('storage/'.explode('/', $request->file('fileKey')->store('/public'))[1]),
+            'created_at' => date('Y-m-d  h:i:s')
+        ]);
     }
+
+
+
+
 
     public function onUpdate(Request $request)
     {
-        
 
         if(is_null($request->file('fileKey'))){
             return ServiceModel::where('id','=',$request->input('id'))
@@ -51,18 +66,21 @@ class ServiceController extends Controller
             ->update([
                 'title'=>$request->input('title'),
                 'description'=>$request->input('description'),
-                'image'=>$file = url('storage/'.explode('/', $request->file('fileKey')->store('/public'))[1]),
+                'image'=> url('storage/'.explode('/', $request->file('fileKey')->store('/public'))[1]),
                 'updated_at'=>date('Y-m-d H:i:s')
             ]);
         }
-
-       
         
     }
+
+
 
     public function onDelete(Request $request)
     {
        return ServiceModel::where('id','=',$request->input('id'))->delete();
 
     }
+
+
+
 }
