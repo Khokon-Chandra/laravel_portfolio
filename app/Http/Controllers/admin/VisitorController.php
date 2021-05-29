@@ -8,9 +8,26 @@ use Illuminate\Http\Request;
 
 class VisitorController extends Controller
 {
-    public function get()
+    public $viewInfo = [
+        'pageName'=>"Visitor",
+        'action'=>['delete'],
+        'attribute'=>['image','title','description','created_at']
+    ];
+
+
+
+
+    public function get(Request $request)
     {
-        return view('admin/visitors',['visitors'=>json_encode(VisitorModel::all())]);
+        if($request->method() == "POST"){
+          
+            return json_encode([
+                "viewInfo"=>$this->viewInfo,
+                "data"=> VisitorModel::all()
+            ]);
+        }
+
+        return view('admin/services');
     }
 
 

@@ -1,3 +1,5 @@
+
+
 const baseUrl = 'http://127.0.0.1:8000/admin/';
 
 var c = 1;
@@ -145,7 +147,6 @@ const TableController = (() => {
 
 
 
-
 const ActionController = (() => {
 
 
@@ -171,7 +172,7 @@ const ActionController = (() => {
                 autocapitalize: 'off'
             },
             showCancelButton: true,
-            confirmButtonText: 'Look up',
+            confirmButtonText: 'Save',
             showLoaderOnConfirm: true,
             preConfirm: (login) => {
                 var data;
@@ -208,7 +209,7 @@ const ActionController = (() => {
             allowOutsideClick: () => !Swal.isLoading()
         }).then((result) => {
             if (result.isConfirmed) {
-                UIController.setToast("success","Inserted Successfully");
+                toastr.success("Inserted Successfully")
                 Controller.initial();
             }
         })
@@ -249,7 +250,7 @@ const ActionController = (() => {
                 autocapitalize: 'off'
             },
             showCancelButton: true,
-            confirmButtonText: 'Look up',
+            confirmButtonText: 'Update',
             showLoaderOnConfirm: true,
             preConfirm: (login) => {
                 var data;
@@ -300,7 +301,7 @@ const ActionController = (() => {
             allowOutsideClick: () => !Swal.isLoading()
         }).then((result) => {
             if (result.isConfirmed) {
-                UIController.setToast("success","Updated Successfully");
+                toastr.success('Successfully Updated!')
                 Controller.initial();
             }
         })
@@ -323,10 +324,10 @@ const ActionController = (() => {
             const response = await axios.post(url, data);
             if (response.status === 200) {
                 $(".spinner").remove();
-                UIController.setToast('success','deleted successfully');
+                toastr.success('Successfully Deleted!')
             }
         } catch (e) {
-            UIController.setToast('error','Delate Faild');
+            toastr.error('Delete faild!!')
 
             console.log(e);
         }

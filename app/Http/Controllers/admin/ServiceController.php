@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class ServiceController extends Controller
 {
+   
     
     public $viewInfo = [
         'pageName'=>"Service",

@@ -3,9 +3,11 @@
 use App\Http\Controllers\admin\BlogController;
 use App\Http\Controllers\site\HomeController;
 use App\Http\Controllers\admin\CourseController;
+use App\Http\Controllers\admin\LoginController;
 use App\Http\Controllers\admin\ProjectController;
 use App\Http\Controllers\admin\ServiceController;
 use App\Http\Controllers\admin\VisitorController;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 
@@ -38,15 +40,32 @@ Route::get('/contact', function () {
  */
 
 
-Route::prefix('admin')->group(function () {
+
+
+    Route::post('/admin/post',[LoginController::class,'post']);
+ 
+    Route::get('/admin/login',[LoginController::class,'login']);
+    Route::post('/admin/login',[LoginController::class,'onLogin']);
+
+    Route::get('/admin/register',[LoginController::class,'register']);
+    Route::post('/admin/register',[LoginController::class,'onRegister']);
+
+ 
+
+    Route::group(['prefix'=>'admin','middleware'=>'login'],function () {
 
     Route::get('/', function () {
         return view('admin/dashboard');
     });
 
-    Route::get('/visitors',[VisitorController::class,'get']);
-    Route::post('/deleteVisitor',[VisitorController::class,'onDelete']);
 
+
+    Route::post('/logout',[LoginController::class,'onLogout']);
+
+    Route::get('/visitors',[VisitorController::class,'get']);
+    Route::post('/visitors',[VisitorController::class,'get']);
+
+    Route::post('/deleteVisitor',[VisitorController::class,'onDelete']);
 
     Route::get('/services',[ServiceController::class,'get']);
     Route::post('/services',[ServiceController::class,'get']);
@@ -71,9 +90,12 @@ Route::prefix('admin')->group(function () {
     Route::post('/updateBlog',[BlogController::class,'onUpdate']);
     Route::post('/delelteBlog',[BlogController::class,'onDelete']);
 
-    
 
 });
 
 
 
+
+Route::fallback(function () {
+    return "404";
+});

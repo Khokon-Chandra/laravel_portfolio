@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{asset('css/responsiveAdmin.css')}}">
     <link rel="stylesheet" href="{{asset('css/datatables.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/datatables-select.min.css')}}">
+    <link rel="stylesheet" type="text/css" href="{{asset('css/toastr.min.css')}}">
     
     <style>.pagination .page-item.active .page-link{background:#ff3547!important }</style>
 </head>
@@ -44,7 +45,54 @@
 <script src="{{asset('js/datatables.min.js')}}"></script>
 <script src="{{asset('js/datatables-select.min.js')}}"></script>
 <script src="{{asset('js/axios.min.js')}}"></script>
-{{-- <script src="{{asset('js/admin.js')}}"></script> --}}
+<script src="{{asset('js/toastr.min.js')}}"></script>
 <script src="{{asset('js/custom_admin.js')}}"></script>
+
+<script>
+
+
+const notifier = ()=>{
+    Swal.fire({
+        title: 'Do you want to Log out?',
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: `Yes`,
+        denyButtonText:'No',
+        }).then((result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+            axios.post("{{url('/admin/logout')}}")
+            .then(function(response){
+                if(response.status ==200){
+                    window.location.href="{{url('/admin/login')}}";
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Logout failed!!',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                }
+            })
+            .catch(response=>{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Logout failed!!',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+            })
+        }
+    })
+}
+
+
+$("#logout").on('click',function(event){
+    event.preventDefault();
+    notifier();
+
+})
+
+</script>
 </body>
 </html>

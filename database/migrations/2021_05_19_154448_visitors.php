@@ -28,6 +28,6 @@ class Visitors extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('visitors');
     }
 }

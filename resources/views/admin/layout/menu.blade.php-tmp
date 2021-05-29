@@ -1,8 +1,0 @@
-
-Fatal error: Uncaught Error: Call to undefined function each() in C:\Users\cram3\AppData\Roaming\Sublime Text 3\Packages\PHPTools\php.tools\codeFormatter.php:54
-Stack trace:
-#0 C:\Users\cram3\AppData\Roaming\Sublime Text 3\Packages\PHPTools\php.tools\codeFormatter.php(41): AddMissingCurlyBraces->addBraces('    <div id="ma...')
-#1 C:\Users\cram3\AppData\Roaming\Sublime Text 3\Packages\PHPTools\php.tools\codeFormatter.php(326): AddMissingCurlyBraces->format('    <div id="ma...')
-#2 C:\Users\cram3\AppData\Roaming\Sublime Text 3\Packages\PHPTools\php.tools\codeFormatter.php(1736): CodeFormatter->formatCode('    <div id="ma...')
-#3 {main}
-  thrown in C:\Users\cram3\AppData\Roaming\Sublime Text 3\Packages\PHPTools\php.tools\codeFormatter.php on line 54
