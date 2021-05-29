@@ -59,6 +59,7 @@
       <i class="fab fa-github"></i>
     </button>
   </div>
+  
 </form>
 
 @endsection
@@ -88,15 +89,13 @@
     axios.post('http://127.0.0.1:8000/admin/register',data)
     .then(function(response){
       if(response.status === 200 && response.data.error === undefined){
-        console.log(response.data);
-        alert('Registration Successfully');
+        toastr.success('Registration Successfully');
       }else{
-        console.log(response.data);
-
+        toastr.error(response.data.error);
       }
     })
     .catch(function(error){
-      console.log(error);
+      toastr.error("Registration faild ! try again.");
     })
   }
 

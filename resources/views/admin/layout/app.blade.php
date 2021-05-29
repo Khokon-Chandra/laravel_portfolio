@@ -55,7 +55,6 @@ const notifier = ()=>{
     Swal.fire({
         title: 'Do you want to Log out?',
         showDenyButton: true,
-        showCancelButton: true,
         confirmButtonText: `Yes`,
         denyButtonText:'No',
         }).then((result) => {

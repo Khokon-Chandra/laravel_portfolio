@@ -54,6 +54,7 @@ class LoginController extends Controller
     function onRegister(Request $request)
     {
         $password = password_hash($request->input('password'),PASSWORD_DEFAULT);
+
         if(!DB::table('users')->where('email','=',$request->input('email'))->get()->count()){
             
             if(DB::table('users')->insert([
@@ -63,13 +64,11 @@ class LoginController extends Controller
                 'password'=>$password,
             ])){
                 return true;
-            }else{
-                return "{error:'Registration Faild'}";
             }
-        }else{
-            return "{error:'Already has na account'}";
+            return json_encode(['error'=>'Registration Faild! try again!']);
         }
 
+        return json_encode(['error'=>'Already has an Account!']);
     }
 
 
