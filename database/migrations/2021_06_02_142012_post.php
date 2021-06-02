@@ -14,6 +14,7 @@ class Post extends Migration
     public function up()
     {
         Schema::create('posts', function (Blueprint $table) {
+            $table->unsignedBigInteger('id')->autoIncrement();
             $table->foreignId('author')->nullable()->constrained('users');
             $table->string('title');
             $table->text('description');

@@ -25,7 +25,7 @@ class CourseFactory extends Factory
             'title'=>$this->faker->text(100),
             'description'=>$this->faker->text(500),
             'image'=>$this->faker->imageUrl(300,400),
-            'price'=>$this->faker->random_int(100,50000)
+            'price'=>$this->faker->randomDigit()
         ];
     }
 }

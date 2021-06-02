@@ -12,4 +12,11 @@ class User extends Model
     protected $primaryKey = 'id';
     public $incrementing = true;
     public $timestamps = true;
+
+    protected $fillable = [
+        'fname',
+        'lname',
+        'email',
+        'role',
+    ];
 }

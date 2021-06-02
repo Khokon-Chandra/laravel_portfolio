@@ -52,7 +52,7 @@ Route::get('/contact', function () {
 
  
 
-    Route::group(['prefix'=>'admin','middleware'=>'login'],function () {
+Route::group(['prefix'=>'admin','middleware'=>'login'],function () {
 
     Route::get('/', function () {
         return view('admin/dashboard');

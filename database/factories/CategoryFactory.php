@@ -23,7 +23,7 @@ class CategoryFactory extends Factory
     {
         return [
             'category_name'=>$this->faker->name(),
-            'parent'=>$this->faker->random_int(0,10),
+            'parent'=>$this->faker->randomDigit(0,10),
         ];
     }
 }

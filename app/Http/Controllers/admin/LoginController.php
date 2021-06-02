@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -53,15 +54,15 @@ class LoginController extends Controller
 
     function onRegister(Request $request)
     {
-        $password = password_hash($request->input('password'),PASSWORD_DEFAULT);
+        
 
-        if(!DB::table('users')->where('email','=',$request->input('email'))->get()->count()){
+        if(!User::where('email',$request->input('email'))->get()->count()){
             
-            if(DB::table('users')->insert([
+            if(User::insert([
                 'fname'=>$request->input('fname'),
                 'lname'=>$request->input('lname'),
                 'email'=>$request->input('email'),
-                'password'=>$password,
+                'password'=>password_hash($request->input('password'),PASSWORD_DEFAULT),
             ])){
                 return true;
             }

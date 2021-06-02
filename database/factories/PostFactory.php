@@ -24,11 +24,11 @@ class PostFactory extends Factory
     public function definition()
     {
         return [
-            'author'=>User::class(),
+            'author'=>User::factory(),
             'title'=>$this->faker->text(100),
             'description'=>$this->faker->text(500),
             'image'=>$this->faker->imageUrl(400,400),
-            'post_container'=>Category::class(),
+            'post_container'=>Category::factory(),
         ];
     }
 }
