@@ -2,17 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class UserFactory extends Factory
+class CategoryFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = User::class;
+    protected $model = Category::class;
 
     /**
      * Define the model's default state.
@@ -22,10 +22,8 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'fname'=>$this->faker->name(),
-            'lname'=>$this->faker->name(),
-            'email'=>$this->faker->email,
-            'role'=>$this->faker->jobTitle
+            'category_name'=>$this->faker->name(),
+            'parent'=>$this->faker->random_int(0,10),
         ];
     }
 }
