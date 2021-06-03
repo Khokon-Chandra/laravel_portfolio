@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\ServiceModel;
+use App\Models\Service;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
@@ -25,7 +25,7 @@ class ServiceController extends Controller
           
             return json_encode([
                 "viewInfo"=>$this->viewInfo,
-                "data"=> ServiceModel::orderBy('id','desc')->get()
+                "data"=> Service::orderBy('id','desc')->get()
             ]);
         }
 
@@ -39,7 +39,7 @@ class ServiceController extends Controller
 
     public function onInsert(Request $request)
     {
-       return ServiceModel::insert([
+       return Service::insert([
             'title' => $request->input('title'),
             'description'=> $request->input('description'),
             'image' => url('storage/'.explode('/', $request->file('fileKey')->store('/public'))[1]),
@@ -55,7 +55,7 @@ class ServiceController extends Controller
     {
 
         if(is_null($request->file('fileKey'))){
-            return ServiceModel::where('id','=',$request->input('id'))
+            return Service::where('id','=',$request->input('id'))
             ->update([
                 'title'=>$request->input('title'),
                 'description'=>$request->input('description'),
@@ -63,7 +63,7 @@ class ServiceController extends Controller
             ]);
         }else{
             
-             return ServiceModel::where('id','=',$request->input('id'))
+             return Service::where('id','=',$request->input('id'))
             ->update([
                 'title'=>$request->input('title'),
                 'description'=>$request->input('description'),
@@ -78,7 +78,7 @@ class ServiceController extends Controller
 
     public function onDelete(Request $request)
     {
-       return ServiceModel::where('id','=',$request->input('id'))->delete();
+       return Service::where('id','=',$request->input('id'))->delete();
 
     }
 
